@@ -11,6 +11,7 @@ int pqArr[100];
 int pqSize;
 int  arr[100];
 int Size;
+int Sorted[100];
 public:
 Heap(){
        Size=0;
@@ -37,6 +38,7 @@ void ExtractMaxP();
 void Insert(int key,int Priority );
 void MaxHeapifyP(int i);
 void printPriorityQueue();
+void SortedArray(int arr[], int& n);
 };
 
 //swap for heapify
@@ -192,14 +194,27 @@ void Heap::MaxHeapifyP(int i) {
     }
 }
 
+//3-sort
+void Heap:: SortedArray(int arr[], int& n){
+   int heapSize = n;
+    BuildMaxHeap(arr, n);
+    for (int i =heapSize-1;i>=0;i--) {
+     Sorted[i] = ExtractMax(arr, heapSize);
+}
 
+for(int i=0;i<n;i++){
+    cout<< Sorted[i] <<" ";
+}
 
+}
 //build max heap
 void Heap::BuildMaxHeap(int arr[], int Size){
 for(int i=Size/2-1;i>=0;i--){
     MaxHeapify(arr,i,Size);
 }
 }
+
+
 
 //print
 void Heap::printHeap(int A[]){
@@ -218,6 +233,7 @@ void Heap:: printPriorityQueue() {
     }
     cout << endl;
 }
+
 
 int main(){
 
@@ -252,10 +268,11 @@ int main(){
 cout<<endl;
     cout << "2- Priority Queue :" << endl;
 h.Insert(10, 2);
-h.Insert(20, 5);
-h.Insert(15, 3);
 h.Insert(25, 4);
 h.Insert(8, 4);
+h.Insert(20, 5);
+h.Insert(15, 3);
+
 cout << "Priority Queue after inserts: ";
 h.printPriorityQueue();
 h.IncreaseKey(2, 18, 5);
@@ -264,5 +281,11 @@ h.printPriorityQueue();
  h.ExtractMaxP();
 cout << "Priority Queue after extraction: ";
 h.printPriorityQueue();
+cout<<endl;
+ cout << "3- Sort Array :" << endl;
+
+cout << "Sorted Array :";
+h.SortedArray(arr,n);
+cout<<endl;
 return 0;
 }
