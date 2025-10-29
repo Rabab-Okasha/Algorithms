@@ -1,82 +1,110 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
-int SequentialSearch(int arr[], int size, int target) {
-    for (int i = 0; i < size; i++) {
-        if (arr[i] == target)
+int SequentialSearch(const vector<int>& arr, int target){
+    for(int i = 0; i < arr.size(); i++){
+        if(arr[i] == target) // target found
             return i;
     }
     return -1;
 }
 
-int RSequentialSearch(int arr[], int size, int target, int i = 0) {
-    if (size == i)
-        return -1;
-    if (arr[i] == target)
-        return i;
-    return RSequentialSearch(arr, size, target, i + 1);
+int RSequentialSearch(const vector<int>& arr, int target){
+    if(arr.empty())
+        return -1; // if vector is empty then target not found
+
+    if(arr[0] == target)
+        return 0; // target found
+
+    // create another vector without the first element
+    vector<int> arr_small(arr.begin() + 1 , arr.end());
+    int result = RSequentialSearch(arr_small, target);
+
+    if(result == -1)
+        return -1; // target not found in smaller vector
+    else
+        return result + 1; // return the correct index as we removed the first element from it
 }
 
-int BinarySearch(int arr[], int size, int target) {
+int BinarySearch(const vector<int>& arr, int target) {
     int left = 0;
-    int right = size - 1;
+    int right = arr.size() - 1;
 
     while (left <= right) {
         int middle = (right + left) / 2;
+        // target is found
         if (arr[middle] == target)
             return middle;
+
         else if (arr[middle] < target)
-            left = middle + 1; //search in left half
+            left = middle + 1; //search in right half
         else
-            right = middle - 1; // search in right half
+            right = middle - 1; // search in left half
     }
     return -1;
 }
 
-int RBinarySearch(int arr[], int left, int right, int target) {
-    int middle = (right + left) / 2;
+int RBinarySearch(const vector<int>& arr, int target, int low, int high) {
+    int middle = (high + low) / 2;
 
-    if(left > right)
+    // if range is invalid, low greater than high
+    if(low > high)
         return -1;
 
+    // target is found
     if(arr[middle] == target)
         return middle;
+
     else if(arr[middle] < target)
-        return RBinarySearch(arr, middle + 1, right, target);
+        return RBinarySearch(arr, target, middle + 1, high); // search right half
     else
-        return RBinarySearch(arr, left, middle - 1, target);
+        return RBinarySearch(arr, target, low, middle - 1);// search left half
 }
 
 int main() {
-    int list[] = {2, 5, 8, 3, 6, 9, 1, 4, 7};
-    int size = sizeof(list) / sizeof(list[0]);
-    int target = 6;
+    vector<int> list = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    int target;
+    int index;
+
+    cout << "The list: [ ";
+    bool first = true;
+    for(int n : list){
+        if(!first)
+            cout << ", ";
+        cout << n;
+        first = false;
+    }
+    cout << " ]";
+    
+    cout << "\nEnter your target: " ;
+    cin >> target;
 
     cout << "-----Sequential search (iterative)-----" << endl;
-    int index = SequentialSearch(list, size, target);
+    index = SequentialSearch(list, target);
     if (index == -1)
         cout << "Target not found!" << endl;
     else
         cout << "Target found at index: " << index << endl;
 
     cout << "\n-----Sequential search (Recursive)-----" << endl;
-    index = RSequentialSearch(list, size, target);
+    index = RSequentialSearch(list,target);
     if (index == -1)
         cout << "Target not found!" << endl;
     else
         cout << "Target found at index: " << index << endl;
 
     cout << "\n-----Binary search (iterative)-----" << endl;
-    index = BinarySearch(list, size, target);
+
+    index = BinarySearch(list, target);
     if (index == -1)
         cout << "Target not found!" << endl;
     else
         cout << "Target found at index: " << index << endl;
 
     cout << "\n-----Binary search (Recursive)-----" << endl;
-    int low = 0;
-    int high = size - 1;
-    index = RBinarySearch(list, low, high, target);
+    int high = list.size() - 1;
+    index = RBinarySearch(list, target, 0, high);
     if (index == -1)
         cout << "Target not found!" << endl;
     else
